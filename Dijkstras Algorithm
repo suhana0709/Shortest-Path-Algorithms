@@ -1,0 +1,64 @@
+#infinity
+INF = float("inf")
+
+#storing the graph in dictionary form
+# key-->node, value--> (a dictionary) with edges and the distance
+graph = {
+    "A" : {"B" : 4, "C" : 2},
+    "B" : {"A" : 4, "C": 1, "D": 5},
+    "C" : {"A": 2, "B": 1, "D": 8, "E": 10},
+    "D" : {"B" : 5, "C": 8, "E": 2, "F": 6},
+    "E" : {"C" : 10, "D" : 2, "F": 6},
+    "F" : {"D" : 6, "E" : 3}
+}
+
+#dijkstra algorithm function
+def dijkstra(graph, start):
+    #dictionary to store the distances from the nodes
+    distance = {}
+    #making a list for the visited nodes
+    visited = []
+    #at first the distance between the nodes are infinity
+    for node in graph:
+        distance[node] = INF
+    #the starting node's distance will be 0
+    distance[start] = 0
+    #as long as all the nodes are not visited
+    while len(visited) < len(graph):
+        current = None
+        #finding the smallest distance
+        smallest = INF
+        #iterating through all the nodes
+        for node in graph:
+            #if the node is still not visited
+            if node not in visited:
+                #and its distance is the smallest
+                if distance[node] < smallest:
+                    #then making it the new smallest distance
+                    smallest = distance[node]
+                    #making it the current node
+                    current = node
+        
+        #if no node is found then end the loop
+        if current is None:
+            break
+        #visiting the current node
+        visited.append(current)
+        #seeing the neighbour's of the current node
+        for neighbour in graph[current]:
+            #finding the weight for the current to neighbour
+            weight = graph[current][neighbour]
+            new_distance = distance[current] + weight
+            #if new distance is smaller than current distance
+            if new_distance < distance[neighbour]:
+                #update the distance'
+                distance[neighbour] = new_distance
+                
+    return distance  #returns all the minimum distances
+    
+start_node = "A"
+result = dijkstra(graph, start_node)
+print("Start Node: ", start_node)
+print("Minimum Distance: ")
+for node in result:
+    print(start_node, "to",node,"=", result[node])
