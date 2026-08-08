@@ -1,0 +1,61 @@
+#Floyd-Warshall Algorithm
+
+#what it does? - find the shortest distance between each node of the graph.
+
+#if two nodes are not connected, then we will use "infinity"
+INF = float('inf')
+
+#making a Distance-Matrix for the graph
+#assuming that we have 4 nodes
+# 0, 1, 2, 3
+# matrix[i][j] --> the distance of going from node i to node j
+
+distance = [
+    [0,   5,   INF, 10],
+    [INF, 0,   3,   INF],
+    [INF, INF, 0,   1],
+    [INF, INF, INF, 0]
+]
+
+#finding the total number of node
+n = len(distance)
+
+#Floyd Warshall Algorithm
+#here, k is the middle node
+#we will put every node one by one in the middle and test it'
+# i -> k -> j
+# i --> j     (this is the direct path)
+#and check whether is it the shortest path or not
+
+for k in range (n):
+    #n is the starting node
+    for i in range(n):
+        #j is the node where we want to go
+        for j in range(n):
+            #now, we will compare the two paths
+            #
+            # 1. firt the shortest path:
+            # i --> j
+            #
+            # 2. puting k in the middle
+            #  i -> k -> j
+            #
+            #if the second path is the shortest
+            #then the distance [i][j] will be updated
+            new_distance = distance[i][k] + distance[k][j]
+            if new_distance < distance[i][j]:
+                distance[i][j] = new_distance
+                
+                
+#driver code
+print("Smallest Distance-Matrix: ")
+for row in distance:
+    
+    for value in row:
+        
+        if value == INF:
+             print("INF", end="\t")
+        else:
+            print(value, end="\t")
+
+    print()
