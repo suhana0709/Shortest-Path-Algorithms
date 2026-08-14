@@ -1,0 +1,95 @@
+def print_solution(board, n):
+    """
+    Function to print the current solution of the board neatly.
+    """
+    for i in range(n): #row (left to right)
+        for j in range(n): #coloumn (up to down)
+            if board[i][j] == 1:
+                print(" Q ", end="")  # Q means there is a queen
+            else:
+                print(" . ", end="")  # . means the cell is empty
+        print()
+    print("-" * (n * 3))
+
+
+def is_safe(board, row, col, n):
+    """
+    Checks whether it is safe to place a queen at a specific (row, col).
+    Since we are placing queens from left to right (column 0 to n-1),
+    we only need to check the left side.
+    """
+    # 1. Check the cells on the left side of the same row
+    for j in range(col):
+        if board[row][j] == 1:
+            return False
+
+    # 2. Check the upper-left diagonal
+    i, j = row, col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+
+    # 3. Check the lower-left diagonal
+    i, j = row, col
+    while i < n and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i += 1
+        j -= 1
+
+    # If there is no attacking queen in any direction, the cell is safe
+    return True
+
+
+def solve_n_queens_util(board, col, n):
+    """
+    Backtracking algorithm that uses recursion to place a queen
+    in each column.
+    """
+    # Base case: if all columns (0 to n-1) have been filled
+    if col >= n:
+        print_solution(board, n)
+        return True
+
+    has_solution = False
+
+    # Try placing a queen in every row of the current column
+    for row in range(n):
+
+        # Check whether the position is safe
+        if is_safe(board, row, col, n):
+
+            # Place the queen (mark the cell with 1)
+            board[row][col] = 1
+
+            # Recursively try to place a queen in the next column
+            has_solution = (
+                solve_n_queens_util(board, col + 1, n) or has_solution
+            )
+
+            # Backtracking: remove the queen if needed
+            # and mark the cell as empty again
+            board[row][col] = 0
+
+    return has_solution
+
+
+def solve_n_queens(n):
+    """
+    Main function that creates an n x n board and starts the solving process.
+    """
+    # Create an n x n board with all cells initially set to 0
+    board = [[0 for _ in range(n)] for _ in range(n)]
+
+    print(f"=== All possible solutions for {n}-Queens Problem ===\n")
+    if not solve_n_queens_util(board, 0, n):
+        print("No solution found.")
+
+
+# Run the program (example: N = 4)
+if __name__ == "__main__":
+    N = 4
+    solve_n_queens(N)
+    
